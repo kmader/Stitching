@@ -12,6 +12,7 @@ import mpicbg.models.PointMatch;
 import mpicbg.models.Tile;
 import mpicbg.models.TranslationModel2D;
 import mpicbg.models.TranslationModel3D;
+import stitching.utils.Log;
 
 
 public class GlobalOptimization 
@@ -39,17 +40,17 @@ public class GlobalOptimization
 					if ( params.dimensionality == 3 )
 					{
 						// the transformations that map each tile into the relative global coordinate system (that's why the "-")
-						p1 = new Point( new float[]{ 0,0,0 } );
+						p1 = new Point( new double[]{ 0,0,0 } );
 						
 						if ( ignoreZ )
-							p2 = new Point( new float[]{ -pair.getRelativeShift()[ 0 ], -pair.getRelativeShift()[ 1 ], 0 } );
+							p2 = new Point( new double[]{ -pair.getRelativeShift()[ 0 ], -pair.getRelativeShift()[ 1 ], 0 } );
 						else
-							p2 = new Point( new float[]{ -pair.getRelativeShift()[ 0 ], -pair.getRelativeShift()[ 1 ], -pair.getRelativeShift()[ 2 ] } );
+							p2 = new Point( new double[]{ -pair.getRelativeShift()[ 0 ], -pair.getRelativeShift()[ 1 ], -pair.getRelativeShift()[ 2 ] } );
 					}
 					else 
 					{
-						p1 = new Point( new float[]{ 0, 0 } );
-						p2 = new Point( new float[]{ -pair.getRelativeShift()[ 0 ], -pair.getRelativeShift()[ 1 ] } );						
+						p1 = new Point( new double[]{ 0, 0 } );
+						p2 = new Point( new double[]{ -pair.getRelativeShift()[ 0 ], -pair.getRelativeShift()[ 1 ] } );						
 					}
 					
 					t1.addMatch( new PointMatchStitching( p1, p2, pair.getCrossCorrelation(), pair ) );
@@ -76,13 +77,13 @@ public class GlobalOptimization
 				
 				if ( params.dimensionality == 3 )
 				{
-					IJ.log( "Error: No correlated tiles found, setting the first tile to (0, 0, 0)." );
+					Log.error( "Error: No correlated tiles found, setting the first tile to (0, 0, 0)." );
 					TranslationModel3D model = (TranslationModel3D)fixedImage.getModel();
 					model.set( 0, 0, 0 );
 				}
 				else
 				{
-					IJ.log( "Error: No correlated tiles found, setting the first tile to (0, 0)." );
+					Log.error( "Error: No correlated tiles found, setting the first tile to (0, 0)." );
 					TranslationModel2D model = (TranslationModel2D)fixedImage.getModel();
 					model.set( 0, 0 );					
 				}
@@ -90,7 +91,7 @@ public class GlobalOptimization
 				ArrayList< ImagePlusTimePoint > imageInformationList = new ArrayList< ImagePlusTimePoint >();
 				imageInformationList.add( fixedImage );
 				
-				IJ.log(" number of tiles = " + imageInformationList.size() );
+				Log.info(" number of tiles = " + imageInformationList.size() );
 				
 				return imageInformationList;
 			}						
@@ -98,14 +99,14 @@ public class GlobalOptimization
 			/*
 			// trash everything but the largest graph			
 			final ArrayList< Set< Tile< ? > > > graphs = Tile.identifyConnectedGraphs( tiles );
-			IJ.log( "Number of tile graphs = " + graphs.size() );
+			Log.info( "Number of tile graphs = " + graphs.size() );
 			
 			int largestGraphSize = 0;
 			int largestGraphId = -1;
 			
 			for ( int i = 0; i < graphs.size(); ++i )
 			{
-				IJ.log( "Graph " + i + ": size = " + graphs.get( i ).size() );
+				Log.info( "Graph " + i + ": size = " + graphs.get( i ).size() );
 				if ( graphs.get( i ).size() > largestGraphSize )
 				{
 					largestGraphSize = graphs.get( i ).size();
@@ -134,8 +135,8 @@ public class GlobalOptimization
 						break;
 					}
 			}
-			//IJ.log(" tiles size =" + tiles.size());
-			//IJ.log(" tc.getTiles() size =" + tc.getTiles().size());
+			//Log.info(" tiles size =" + tiles.size());
+			//Log.info(" tc.getTiles() size =" + tc.getTiles().size());
 
 			try
 			{
@@ -147,7 +148,7 @@ public class GlobalOptimization
 
 				if ( ( ( avgError*params.relativeThreshold < maxError && maxError > 0.95 ) || avgError > params.absoluteThreshold ) )
 				{
-					float longestDisplacement = 0;
+					double longestDisplacement = 0;
 					PointMatch worstMatch = null;
 
 					// new way of finding biggest error to look for the largest displacement
@@ -170,11 +171,11 @@ public class GlobalOptimization
 					float longestDisplacement = 0;
 					PointMatch worstMatch = null;
 					
-					//IJ.log( "worstTile: " + ((ImagePlusTimePoint)worstTile).getImagePlus().getTitle() );
+					//Log.info( "worstTile: " + ((ImagePlusTimePoint)worstTile).getImagePlus().getTitle() );
 
 					for (PointMatch p : matches)
 					{
-						//IJ.log( "distance: " + p.getDistance() + " to " + ((PointMatchStitching)p).getPair().getImagePlus2().getTitle() );
+						//Log.info( "distance: " + p.getDistance() + " to " + ((PointMatchStitching)p).getPair().getImagePlus2().getTitle() );
 
 						if (p.getDistance() > longestDisplacement)
 						{
@@ -185,7 +186,7 @@ public class GlobalOptimization
 					*/
 					final ComparePair pair = ((PointMatchStitching)worstMatch).getPair();
 					
-					IJ.log( "Identified link between " + pair.getImagePlus1().getTitle() + "[" + pair.getTile1().getTimePoint() + "] and " + 
+					Log.info( "Identified link between " + pair.getImagePlus1().getTitle() + "[" + pair.getTile1().getTimePoint() + "] and " + 
 							pair.getImagePlus2().getTitle() + "[" + pair.getTile2().getTimePoint() + "] (R=" + pair.getCrossCorrelation() +") to be bad. Reoptimizing.");
 					
 					((PointMatchStitching)worstMatch).getPair().setIsValidOverlap( false );
@@ -200,8 +201,7 @@ public class GlobalOptimization
 			}
 			catch ( Exception e )
 			{ 
-				IJ.log( "Cannot compute global optimization: " + e ); 
-				e.printStackTrace(); 
+				Log.error( "Cannot compute global optimization: " + e, e );
 			}
 		}
 		while(redo);
