@@ -49,6 +49,7 @@
 			<groupId>sc.fiji</groupId>
 			<artifactId>Fiji_Plugins</artifactId>
 		</dependency>
+        <!-- test removing imglib1 -->
 		<dependency>
 			<groupId>sc.fiji</groupId>
 			<artifactId>legacy-imglib1</artifactId>
@@ -67,9 +68,13 @@
 			<artifactId>imglib2</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>net.imglib2</groupId>
-			<artifactId>imglib2-algorithm</artifactId>
-		</dependency>
+            <groupId>net.imglib2</groupId>
+            <artifactId>imglib2-algorithm</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.imglib2</groupId>
+            <artifactId>imglib2-algorithm-gpl</artifactId>
+        </dependency>
 		<dependency>
 			<groupId>net.imglib2</groupId>
 			<artifactId>imglib2-ij</artifactId>
@@ -102,7 +107,8 @@
 			<groupId>edu.mines</groupId>
 			<artifactId>mines-jtk</artifactId>
 		</dependency>
-		<dependency>
+
+        <dependency>
 			<groupId>mpicbg</groupId>
 			<artifactId>mpicbg</artifactId>
 			<exclusions>
@@ -118,6 +124,7 @@
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
 		</dependency>
-	</dependencies>
+
+    </dependencies>
 
 </project>

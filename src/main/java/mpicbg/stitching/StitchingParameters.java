@@ -1,14 +1,19 @@
 package mpicbg.stitching;
 
-import mpicbg.imglib.container.ContainerFactory;
-import mpicbg.imglib.container.array.ArrayContainerFactory;
+import net.imglib2.img.array.ArrayImgFactory;
+
+/**
+ * import mpicbg.imglib.container.ContainerFactory;
+ import mpicbg.imglib.container.array.ArrayContainerFactory;
+ */
+
 
 public class StitchingParameters 
 {
 	/**
 	 * If we cannot wrap, which factory do we use for computing the phase correlation
 	 */
-	public static ContainerFactory phaseCorrelationFactory = new ArrayContainerFactory();
+	public static ArrayImgFactory phaseCorrelationFactory = new ArrayImgFactory();
 	
 	/**
 	 * If you want to force that the {@link ContainerFactory} above is always used set this to true
